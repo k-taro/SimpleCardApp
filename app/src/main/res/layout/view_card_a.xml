@@ -16,7 +16,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/cardImageView"
-            android:src="@drawable/ic_launcher"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -28,7 +27,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Caption"
             android:id="@+id/textViewCaption"
             android:textSize="@dimen/textsize_caption"
             android:maxLines="2"
@@ -58,7 +56,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="And when I was growing up, my uncle used to tell me stories  all the time, down by the sea, where the wind and the salt water   would sometimes get in your eyes and make you blink. And then   you’d blink again with the freshness and new feeling.  Now my uncle felt that stories were at the heart of  communication, and he said that his grandfather told him the   same stories. And his grandfather would always begin a story by   saying, “Let your eyes grow sleepy now as you listen to this story   that comes to us from a far off place now.”"
                 android:id="@+id/textViewBody"
                 android:textSize="@dimen/textsize_body"
                 android:layout_centerHorizontal="true"
