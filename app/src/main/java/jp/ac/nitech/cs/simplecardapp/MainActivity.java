@@ -94,7 +94,7 @@ public class MainActivity extends Activity {
             body = getArguments().getFloat(TEXTSIZE_BODY, body);
             caption = getArguments().getFloat(TEXTSIZE_CAPTION, caption);
 
-            viewPager.setAdapter(new CardPagerAdapter(body, caption));
+            viewPager.setAdapter(new CardPagerAdapter(getActivity().getApplicationContext(), body, caption));
 
             return rootView;
         }
