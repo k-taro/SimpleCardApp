@@ -7,12 +7,16 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import jp.ac.nitech.cs.simplecardapp.dbutil.AccessWrapper;
 import jp.ac.nitech.cs.simplecardapp.model.Card;
+import jp.ac.nitech.cs.simplecardapp.model.Content;
 
 /**
  * Created by Keitaro Wakabayashi on 2014/12/04.
@@ -47,41 +51,46 @@ public class CardPagerAdapter extends PagerAdapter {
 
         Card c = dbAccess.getCard(position+1, "ja");
 
-        if(c.type.equals("textonly")){
-            view = li.inflate(R.layout.view_card_b, null);
+        view = li.inflate(R.layout.view_card_web, null);
 
-            TextView textViewBody = (TextView) view.findViewById(R.id.textViewBody);
-            textViewBody.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSizeBody);
+        String html = new String(c.schema);
 
-            String str = "";
+        for(int i = 0; i<3; i++){
+            if(c.contents[i] == null){
+                break;
+            }
+            String regex = "\\{\\$[a-zA-Z0-9]+\\}";
+            Pattern p = Pattern.compile(regex);
+            Matcher m = p.matcher(html);
             try {
-                str = new String(c.contents[0].content, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
+                boolean isFind = m.find();
+                String replace = new String(c.contents[i].content, "UTF-8");
+                html = m.replaceFirst(replace);
+            }catch(UnsupportedEncodingException e){
                 e.printStackTrace();
             }
-
-            textViewBody.setText(str);
-        }else{
-            view = li.inflate(R.layout.view_card_b, null);
         }
 
-//        if(position % 3 == 0){
-//            view = li.inflate(R.layout.view_card_a, null);
-//            TextView textViewBody = (TextView) view.findViewById(R.id.textViewBody);
-//            textViewBody.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSizeBody);
-//
-//            TextView textViewCaption = (TextView) view.findViewById(R.id.textViewCaption);
-//            textViewCaption.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSizeCaption);
-//        }else if(position % 3 == 1){
+        WebView webView = (WebView) view.findViewById(R.id.webView);
+        html = "<html><body>"+ html +"</body></html>";
+        webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
+
+//        if(c.schema.equals("textonly")){
 //            view = li.inflate(R.layout.view_card_b, null);
 //
 //            TextView textViewBody = (TextView) view.findViewById(R.id.textViewBody);
 //            textViewBody.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSizeBody);
-//        }else{
-//            view = li.inflate(R.layout.view_card_c, null);
 //
-//            TextView textViewCaption = (TextView) view.findViewById(R.id.textViewCaption);
-//            textViewCaption.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSizeCaption);
+//            String str = "";
+//            try {
+//                str = new String(c.contents[0].content, "UTF-8");
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
+//
+//            textViewBody.setText(str);
+//        }else{
+//            view = li.inflate(R.layout.view_card_b, null);
 //        }
 
         container.addView(view);

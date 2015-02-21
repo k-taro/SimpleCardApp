@@ -30,7 +30,7 @@ public class AccessWrapper {
         String sql =
                 "select " +
                 " cards._id as _id," +
-                " cards.type as type," +
+                " cardtype.schema as schema," +
                 " cards.lang as lang," +
                 " cards.page_index as page_index," +
                 " contents1._id as content1_id," +
@@ -46,6 +46,7 @@ public class AccessWrapper {
                 " select * from cards" +
                 " where page_index = ? and lang = ?" +
                 " ) as cards" +
+                " inner join cardtype cardtype on cards.type = cardtype.name" +
                 " inner join contents contents1 on cards.content1 = contents1._id" +
                 " left outer join contents contents2 on cards.content2 = contents2._id" +
                 " left outer join contents contents3 on cards.content3 = contents3._id" +
@@ -55,7 +56,7 @@ public class AccessWrapper {
         Cursor cursor = db.rawQuery(sql, new String[]{Integer.toString(index), language});
 
         int id = 0;
-        String type = null;
+        String schema = null;
         String lang = null;
         int page_index = 0;
         int content1_id = 0;
@@ -70,7 +71,7 @@ public class AccessWrapper {
 
         while(cursor.moveToNext()) {
             id = cursor.getInt(cursor.getColumnIndex("_id"));
-            type = cursor.getString(cursor.getColumnIndex("type"));
+            schema = cursor.getString(cursor.getColumnIndex("schema"));
             lang = cursor.getString(cursor.getColumnIndex("lang"));
             page_index = cursor.getInt(cursor.getColumnIndex("page_index"));
             content1_id = cursor.getInt(cursor.getColumnIndex("content1_id"));
@@ -97,7 +98,7 @@ public class AccessWrapper {
 //            e.printStackTrace();
         }
 
-        Card c = new Card(id, type, lang, page_index, contents);
+        Card c = new Card(id, schema, lang, page_index, contents);
 
         return c;
     }
@@ -130,9 +131,11 @@ public class AccessWrapper {
         public void onCreate(SQLiteDatabase db) {
             String createContentTable = "create table contents ( _id integer primary key asc autoincrement, type text, content blob);";
             String createCardsTable = "create table cards ( _id integer primary key asc autoincrement, type text, lang text, page_index integer not null check(page_index > 0), content1 integer, content2 integer, content3 integer);";
+            String createCardTypeTable = "create table cardtype ( name text primary key, desc text, schema text);";
 
             db.execSQL(createContentTable);
             db.execSQL(createCardsTable);
+            db.execSQL(createCardTypeTable);
 
             addTestData(db);
         }
@@ -141,6 +144,7 @@ public class AccessWrapper {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("drop table contents;");
             db.execSQL("drop table cards;");
+            db.execSQL("drop table cardtype");
             onCreate(db);
         }
 
@@ -206,6 +210,27 @@ public class AccessWrapper {
 
             for(ContentValues v : cardValues){
                 db.insert("cards",null,v);
+            }
+
+            ContentValues[] cardtypeValues = new ContentValues[3];
+
+            cardtypeValues[0] = new ContentValues();
+            cardtypeValues[0].put("name", "textonly");
+            cardtypeValues[0].put("desc", "Only text");
+            cardtypeValues[0].put("schema", "<div>{$text}</div>");
+
+            cardtypeValues[1] = new ContentValues();
+            cardtypeValues[1].put("name", "titletext");
+            cardtypeValues[1].put("desc", "Title and text");
+            cardtypeValues[1].put("schema", "<h2>{$title}</h2><div>{$text}</div>");
+
+            cardtypeValues[2] = new ContentValues();
+            cardtypeValues[2].put("name", "imgtext");
+            cardtypeValues[2].put("desc", "Image and text");
+            cardtypeValues[2].put("schema", "<img src=\"{$img}\"/><div>{$text}</div>");
+
+            for(ContentValues v : cardtypeValues){
+                db.insert("cardtype",null,v);
             }
         }
     }
