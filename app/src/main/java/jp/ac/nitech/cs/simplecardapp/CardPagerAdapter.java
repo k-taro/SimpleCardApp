@@ -73,6 +73,17 @@ public class CardPagerAdapter extends PagerAdapter {
 
         WebView webView = (WebView) view.findViewById(R.id.webView);
         html = "<html><body>"+ html +"</body></html>";
+
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("<html><body>");
+        stringBuffer.append("<img src=");
+        stringBuffer.append("\"data:image/png;base64,");
+        stringBuffer.append(container.getContext().getResources().getString(R.string.demoimgbin));
+        stringBuffer.append("\">");
+        stringBuffer.append("</body></html>");
+
+        html = stringBuffer.toString();
+
         webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
 
 //        if(c.schema.equals("textonly")){
