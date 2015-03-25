@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,6 +66,11 @@ public class CardPagerAdapter extends PagerAdapter {
             try {
                 boolean isFind = m.find();
                 String replace = new String(c.contents[i].content, "UTF-8");
+//                if(c.contents[i].type.equals("text")) {
+//                    replace = new String(c.contents[i].content, "UTF-8");
+//                }else{
+//                    replace = c.contents[i].content.toString();
+//                }
                 html = m.replaceFirst(replace);
             }catch(UnsupportedEncodingException e){
                 e.printStackTrace();

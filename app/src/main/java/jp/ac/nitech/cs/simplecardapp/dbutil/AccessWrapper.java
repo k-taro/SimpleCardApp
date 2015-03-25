@@ -32,26 +32,26 @@ public class AccessWrapper {
         String sql =
                 "select " +
                 " cards._id as _id," +
-                " cardtype.schema as schema," +
+                " cardtypes.schema as schema," +
                 " cards.lang as lang," +
                 " cards.page_index as page_index," +
-                " contents1._id as content1_id," +
-                " contents1.type as content1_type," +
-                " contents1.content as content1," +
-                " contents2._id as content1_id," +
-                " contents2.type as content2_type," +
-                " contents2.content as content2," +
-                " contents3._id as content1_id," +
-                " contents3.type as content3_type," +
-                " contents3.content as content3" +
+                " content1._id as content1_id," +
+                " content1.type as content1_type," +
+                " content1.content as content1," +
+                " content2._id as content2_id," +
+                " content2.type as content2_type," +
+                " content2.content as content2," +
+                " content3._id as content3_id," +
+                " content3.type as content3_type," +
+                " content3.content as content3" +
                 " from (" +
                 " select * from cards" +
                 " where page_index = ? and lang = ?" +
                 " ) as cards" +
-                " inner join cardtype cardtype on cards.type = cardtype.name" +
-                " inner join contents contents1 on cards.content1 = contents1._id" +
-                " left outer join contents contents2 on cards.content2 = contents2._id" +
-                " left outer join contents contents3 on cards.content3 = contents3._id" +
+                " inner join cardtypes cardtypes on cards.type = cardtypes.name" +
+                " inner join contents content1 on cards.content1 = content1._id" +
+                " left outer join contents content2 on cards.content2 = content2._id" +
+                " left outer join contents content3 on cards.content3 = content3._id" +
                 "";
 
 
@@ -133,7 +133,7 @@ public class AccessWrapper {
         public void onCreate(SQLiteDatabase db) {
             String createContentTable = "create table contents ( _id integer primary key asc autoincrement, type text, content blob);";
             String createCardsTable = "create table cards ( _id integer primary key asc autoincrement, type text, lang text, page_index integer not null check(page_index > 0), content1 integer, content2 integer, content3 integer);";
-            String createCardTypeTable = "create table cardtype ( name text primary key, desc text, schema text);";
+            String createCardTypeTable = "create table cardtypes ( name text primary key, desc text, schema text);";
 
             db.execSQL(createContentTable);
             db.execSQL(createCardsTable);
@@ -146,7 +146,7 @@ public class AccessWrapper {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("drop table contents;");
             db.execSQL("drop table cards;");
-            db.execSQL("drop table cardtype");
+            db.execSQL("drop table cardtypes");
             onCreate(db);
         }
 
@@ -232,7 +232,7 @@ public class AccessWrapper {
             cardtypeValues[2].put("schema", "<img src=\"{$img}\"/><div>{$text}</div>");
 
             for(ContentValues v : cardtypeValues){
-                db.insert("cardtype",null,v);
+                db.insert("cardtypes",null,v);
             }
         }
     }
