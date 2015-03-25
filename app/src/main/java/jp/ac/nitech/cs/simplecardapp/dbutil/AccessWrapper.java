@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.UnsupportedCharsetException;
 
+import jp.ac.nitech.cs.simplecardapp.MainActivity;
 import jp.ac.nitech.cs.simplecardapp.model.Card;
 import jp.ac.nitech.cs.simplecardapp.model.Content;
 
@@ -16,7 +18,7 @@ import jp.ac.nitech.cs.simplecardapp.model.Content;
  * Created by keitaro on 2015/02/05.
  */
 public class AccessWrapper {
-    private static final String DB_NAME = "simple_card_app.db";
+    private static final String DB_NAME = MainActivity.APP_DIRECTORY +"simple_card_app.db";
     private static final int DB_VERTION = 1;
     private final Helper helper;
 

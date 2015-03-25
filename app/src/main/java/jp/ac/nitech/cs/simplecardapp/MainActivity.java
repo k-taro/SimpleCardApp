@@ -3,6 +3,7 @@ package jp.ac.nitech.cs.simplecardapp;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -12,16 +13,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
+
 
 public class MainActivity extends Activity {
+    public static final String APP_DIRECTORY = Environment.getExternalStorageDirectory() + File.separator + "simplecardapp" + File.separator;
     private double baseDisplaySize = 5.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        File appDir = new File(APP_DIRECTORY);
+        if(!appDir.exists()){
+            appDir.mkdirs();
+        }
+
         setContentView(R.layout.activity_main);
 
-        float bodyTextSizePt = this.getResources().getDimension(R.dimen.textsize_body);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int dpi = displayMetrics.densityDpi;
