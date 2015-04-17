@@ -75,7 +75,7 @@ public class CardPagerAdapter extends PagerAdapter {
                 }else {
                     sb.append(new String(c.contents[i].content, "UTF-8"));
                 }
-                html = m.replaceFirst(sb.toString());
+                 html = m.replaceFirst(sb.toString());
             }catch(UnsupportedEncodingException e){
                 e.printStackTrace();
             }
