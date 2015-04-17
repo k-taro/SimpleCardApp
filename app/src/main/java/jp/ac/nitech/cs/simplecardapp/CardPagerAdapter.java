@@ -65,13 +65,17 @@ public class CardPagerAdapter extends PagerAdapter {
             Matcher m = p.matcher(html);
             try {
                 boolean isFind = m.find();
-                String replace = new String(c.contents[i].content, "UTF-8");
-//                if(c.contents[i].type.equals("text")) {
-//                    replace = new String(c.contents[i].content, "UTF-8");
-//                }else{
-//                    replace = c.contents[i].content.toString();
-//                }
-                html = m.replaceFirst(replace);
+                StringBuilder sb = new StringBuilder();
+
+                if(c.contents[i].type.equals("img")) {
+                    for (int j = 0; j < c.contents[i].content.length / 2; j++) {
+                        byte[] b = {c.contents[i].content[2 * j], c.contents[i].content[2 * j + 1]};
+                        sb.append(new String(b, "UTF-8"));
+                    }
+                }else {
+                    sb.append(new String(c.contents[i].content, "UTF-8"));
+                }
+                html = m.replaceFirst(sb.toString());
             }catch(UnsupportedEncodingException e){
                 e.printStackTrace();
             }
